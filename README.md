@@ -31,15 +31,16 @@ Claude takes it from there. It checks Chrome, asks about you and the jobs you wa
 
 Close the spreadsheet before asking Claude to search or score, so your edits and Claude's don't collide.
 
-Also: **change my settings**, **update the kit**, and **add the network add-on** (optional, see below).
+Also: **change my settings** and **update the kit**. There are two optional add-ons, described below.
 
 ## Your privacy
 
 Everything about your search stays in the `my-search` folder on your Mac. Nothing is uploaded anywhere except your normal conversation with Claude, and Chrome visiting job sites as you.
 
-## Optional: the network add-on
+## Optional add-ons
 
-Scores each job by who you know at that company on LinkedIn, and maps out who could introduce you. It uses more of your Claude plan. To add it, say **add the network add-on**.
+- **Network.** Scores each job by who you know at that company on LinkedIn, and maps out who could introduce you. It uses more of your Claude plan. Say **add the network add-on**.
+- **Unemployment (Oregon only).** Keeps the weekly work-search record Oregon asks for, built from the applications you track here, and gets each week's claim ready to copy into Frances Online. Say **add the unemployment add-on**.
 
 ---
 

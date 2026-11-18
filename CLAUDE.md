@@ -15,9 +15,11 @@ If `my-search/profile.md` doesn't exist, or it says `setup_complete: false`, the
 | "score my jobs", "rescore" | `score-jobs` |
 | "tailor my resume for <company>" | `tailor-resume` |
 | "update the kit" | `update-kit` |
-| "add the network add-on" | `add-network-addon` |
+| "add the network add-on", "add the unemployment add-on" | `add-addon` |
 
-If the network add-on is installed (`network: installed` in `profile.md`), it adds more skills (for example `build-connections` and `map-company-connections`). Its instructions are in those skills.
+Add-ons add their own skills when installed (listed under `## Add-ons` in `profile.md`). The **network** add-on adds `build-connections`, `rate-connections`, `network-check`, `map-company-connections` and `add-work-context`. The **unemployment** add-on adds `log-work-search`.
+
+If the unemployment add-on is installed, mention once per session, after a scan, a scoring run or a tailored resume, and only if the user hasn't logged this week yet: "When you're ready, say **log my work search** to add this week's activity to your unemployment record." Never log anything without the user confirming it.
 
 ## Where things live
 
@@ -37,6 +39,7 @@ job-search-kit/
     ├── postings/            one .md per job description
     ├── applications/        one folder per tailored resume
     ├── network/             network add-on data, if installed
+    ├── work-search/         unemployment add-on records, if installed
     ├── .cache/              seen.json, career-page-cache.json, network cache
     ├── .backups/            automatic backups, 3 newest per file
     └── .addons/             record of installed add-on files

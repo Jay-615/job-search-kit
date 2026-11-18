@@ -112,13 +112,14 @@ All four sources are on by default: LinkedIn, Indeed, Dice, company career pages
 
 Options: "Standard (Recommended): all sites, up to 8 company pages per search" / "Lighter: all sites, up to 3 company pages per search" / "Choose sites myself" (multi-select). Write `## Sources` and `## Career-page limits` to `profile.md`. Leave the `## Scoring` defaults as they are (0.9 experience / 0.1 target company / 0 network, threshold 70).
 
-## Stage `addon`: the network add-on
+## Stage `addon`: optional add-ons
 
-Ask:
+Two optional extras. Ask about each separately.
 
-> One optional extra: the **network add-on** scores each job by who you know at that company on LinkedIn, and can map out who could introduce you. It's slower and uses more of your Claude plan, and it reads your LinkedIn connections, which takes a few minutes the first time. Want it?
+1. **Unemployment.** Ask: "Are you claiming Oregon unemployment benefits? If so, the **unemployment add-on** keeps the weekly work-search record the state asks for (2 employer contacts and 3 activities a week), using the applications you track here, and gets each week's claim ready to copy into Frances Online." Options: "Not claiming, skip it (Recommended)" / "Yes, add it". If they're claiming in another state, say kindly that the add-on only knows Oregon's rules, and skip it.
+2. **Network.** Ask: "The **network add-on** scores each job by who you know at that company on LinkedIn, and can map out who could introduce you. It's slower, uses more of your Claude plan, and reads your LinkedIn connections, which takes a few minutes the first time. Want it?" Options: "Not now, I can add it later (Recommended)" / "Yes, add it".
 
-Options: "Not now, I can add it later (Recommended)" / "Yes, add it". On yes, follow `.claude/skills/add-network-addon/SKILL.md` now, then come back here. On no, mention: "You can add it any time by saying 'add the network add-on'."
+For each yes, follow `.claude/skills/add-addon/SKILL.md` for that add-on, then come back here. Skip its "first-install" offer to start right away. The first run comes next anyway. For each no, mention: "You can add it any time by saying 'add the <name> add-on'."
 
 ## Stage `first-run`: finish and try it
 

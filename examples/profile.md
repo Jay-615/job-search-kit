@@ -35,6 +35,7 @@
 
 ## Add-ons
 - network: not installed
+- unemployment: not installed
 
 ## Setup progress
 - setup_complete: true

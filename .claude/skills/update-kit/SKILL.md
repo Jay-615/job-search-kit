@@ -31,7 +31,7 @@ Source: `https://github.com/Jay-615/job-search-kit` (branch `main`).
 
    The files land in `$T/job-search-kit-main/`.
 2. Read the new `CHANGELOG.md`. Find the entries newer than the local version.
-3. List which program files would change, be added or be removed. Compare these paths only: `.claude/skills/`, `.claude/settings.json`, `scripts/`, `templates/`, `docs/`, `examples/`, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `VERSION`, `LICENSE`, `.gitignore`. **Skills installed by the network add-on are not part of the kit.** Leave every path listed in `my-search/.addons/network-manifest.md` alone, if that file exists.
+3. List which program files would change, be added or be removed. Compare these paths only: `.claude/skills/`, `.claude/settings.json`, `scripts/`, `templates/`, `docs/`, `examples/`, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `VERSION`, `LICENSE`, `.gitignore`. **Skills installed by add-ons are not part of the kit.** Leave every path listed in any `my-search/.addons/*-manifest.md` alone.
 
 ## Step 3: Confirm
 
@@ -45,9 +45,9 @@ Tell the user in plain words what's new (from the changelog, not the file list),
 4. If any changelog entry has a **Migration** section (a new setting), apply it: ask for the new value, or write the stated default into `my-search/profile.md`.
 5. Confirm: "Updated to <new version>. <one-line summary>." Mention that a backup of the old version is in `my-search/.backups/` in case anything looks wrong.
 
-## Step 5: The network add-on
+## Step 5: Add-ons
 
-If `my-search/profile.md` says `network: installed`, compare its `network_version` with `https://raw.githubusercontent.com/Jay-615/job-search-kit-network/main/VERSION`. If it's newer, offer to update it. If they agree, run the install steps in `.claude/skills/add-network-addon/SKILL.md` in update mode.
+For each add-on that `my-search/profile.md` lists as `<name>: installed` (see the table in `.claude/skills/add-addon/SKILL.md` for each one's repository), compare its `<name>_version` with `https://raw.githubusercontent.com/<repository>/main/VERSION`. If it's newer, offer to update it. If they agree, run the install steps in `.claude/skills/add-addon/SKILL.md` in update mode.
 
 ## Rules
 
