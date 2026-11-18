@@ -6,6 +6,10 @@ You're running inside job-search-kit, a job-search helper. The user downloaded i
 
 If `my-search/profile.md` doesn't exist, or it says `setup_complete: false`, the user isn't set up yet. Greet them and offer to start: "Looks like you're new here. Want me to set you up? It takes about 10 minutes." Then follow the `setup` skill.
 
+## Weekly update check
+
+If the user is set up, run `python3 scripts/check_updates.py` once near the start of each session, before or alongside their first request. It checks GitHub at most once a week and stays silent otherwise. If its output lists any `updates`, mention it once, briefly, after answering their first request: "By the way, a newer version of the kit is available (<current> → <latest>). Say **update the kit** whenever you like." Name an add-on instead of "the kit" when that's what has the update. Don't update anything unless they ask. If the output says `"checked": false`, say nothing.
+
 ## What the user can ask for
 
 | They say | Skill |

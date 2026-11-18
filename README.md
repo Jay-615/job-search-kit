@@ -31,7 +31,7 @@ Claude takes it from there. It checks Chrome, asks about you and the jobs you wa
 
 Close the spreadsheet before asking Claude to search or score, so your edits and Claude's don't collide.
 
-Also: **change my settings** and **update the kit**. There are two optional add-ons, described below.
+Also: **change my settings** and **update the kit**. Claude checks for a newer version about once a week and tells you when there is one. There are two optional add-ons, described below.
 
 ## Your privacy
 

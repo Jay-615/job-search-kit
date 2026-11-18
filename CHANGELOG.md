@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+The kit now checks for updates by itself, at most once a week, and mentions it when a newer version of the kit or one of your add-ons is out. It only looks at version numbers and never changes anything until you say **update the kit**.
+
 ## 1.1.0
 
 New optional **unemployment add-on** for Oregon claimants: say "add the unemployment add-on". The add-on installer now handles both add-ons (the `add-network-addon` command is now `add-addon`, and "add the network add-on" still works). Also includes the fixes from the first full test: fairer scoring weights (jobs at companies not on your list can now reach the top), cleaner Indeed results, a clearer LinkedIn-login choice, Word resumes that need nothing installed, and fewer permission prompts.
