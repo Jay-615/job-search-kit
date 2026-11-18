@@ -14,7 +14,10 @@ Source: `https://github.com/Jay-615/job-search-kit` (branch `main`).
 1. Read the local `VERSION`.
 2. Fetch the latest: `curl -fsSL https://raw.githubusercontent.com/Jay-615/job-search-kit/main/VERSION`.
 3. If they match: "You're on the latest version (<version>)." Then go to Step 5 (the add-on check), then stop.
-4. If the fetch fails: "I couldn't reach GitHub just now. Check your internet connection and try again later." Then stop.
+4. If the fetch fails, tell the two cases apart (`curl -sS -o /dev/null -w "%{http_code}"` on the same URL):
+   - **No connection** (curl can't connect, status `000`): "I couldn't reach GitHub just now. Check your internet connection and try again later."
+   - **404 or another HTTP error**: "I reached GitHub, but couldn't find the kit's update page. It may have moved. Ask whoever shared the kit with you for the current link." Don't mention the internet connection in this case.
+   Then stop.
 
 ## Step 2: Download and compare
 

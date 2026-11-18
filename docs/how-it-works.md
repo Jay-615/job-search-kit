@@ -17,10 +17,10 @@ New jobs become rows in your spreadsheet, `my-search/pipeline.csv`, marked `new`
 Each job gets two or three scores from 0 to 100:
 
 - **Experience match**: Claude reads the description against your resume: level, years, industry, skills, and any required qualifications. This is the main one.
-- **Target company**: High-priority companies on your list score 100, Medium 60, Low 20, and companies not on it 0.
+- **Target company**: High-priority companies on your list score 100, Medium 60, Low 20, and companies not on it 0. It counts for only 10%, so it nudges your favorites up without hiding good jobs elsewhere.
 - **Network** (only with the add-on): who you know there, weighted by how well you know them.
 
-They're combined with weights from your settings (70% experience and 30% target company by default, or 50/30/20 with the network add-on). Your top-choice job title gets a small bonus. The `why` column says in a few words what drove each score.
+They're combined with weights from your settings (90% experience and 10% target company by default, or 60% experience, 30% network and 10% target company with the network add-on). A job whose title is exactly your top-choice title gets a small bonus. The `why` column says in a few words what drove each score.
 
 Scores are a sorting aid, not a verdict. Your own notes and status in the spreadsheet always win. Claude never changes them.
 
@@ -28,7 +28,7 @@ Scores are a sorting aid, not a verdict. Your own notes and status in the spread
 
 Claude starts from your master resume (`my-search/resume/master-resume.md`), rewrites the summary for this job, puts the most relevant bullets first, tightens wording, and drops what's clearly off-topic. **It never adds experience you don't have.** Anything the job asks for that your resume doesn't show goes into `notes.md` as a gap for you to judge.
 
-The Word version uses your original resume's styling if you gave a Word file.
+The Word version uses a clean standard layout. If you gave a Word resume and the optional converter (pandoc) is installed, it copies your own resume's styling instead.
 
 ## What it won't do
 

@@ -56,7 +56,7 @@ The user opens this in Excel or Numbers, sorts it, and types their own notes and
 
 - Personal data goes only in `my-search/`. Never write the user's details anywhere else in this folder.
 - Before overwriting any file in `my-search/`, back it up with `python3 scripts/pipeline.py backup <file>`.
-- Temporary work files go in `my-search/.cache/tmp/`. Delete them when a command finishes.
+- Temporary work files go in `my-search/.cache/tmp/`. When a command finishes, delete them with exactly `rm -rf my-search/.cache/tmp`. That exact command is pre-approved, so the user isn't asked.
 - Never invent experience in a resume. Gaps go in the notes file.
 - Never type passwords, log in for the user, solve CAPTCHAs, or submit applications.
 - The user is on a Mac. Prefer Python (`python3`) over shell tricks that differ between Mac and Linux (`sed -i`, `date -d`, `stat`). Don't assume Homebrew.

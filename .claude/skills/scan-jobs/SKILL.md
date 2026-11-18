@@ -15,7 +15,7 @@ Scoring happens afterwards in the `score-jobs` skill.
 
 This is the most expensive command in the kit. Respect the career-page limits in `profile.md`. When something looks wrong (a CAPTCHA, a rate limit, a page that returns nothing), **say so plainly** rather than guessing. An honest "Indeed was skipped" is fine. A silently thin result is not.
 
-**Small mode.** If `$ARGUMENTS` contains `small` (setup's first run uses this): LinkedIn plus one other enabled board, the first two roles only, at most 2 career pages, and fetch descriptions for the top 15 candidates at most. Say at the start that this is a small first search.
+**Small mode.** If `$ARGUMENTS` contains `small` (setup's first run uses this): LinkedIn plus one other enabled board, the first two roles only, at most 2 career pages, and read full descriptions for at most **10 LinkedIn jobs plus 5 from the other sources combined** (15 in total). Say at the start that this is a small first search.
 
 ## How to talk to the user
 
@@ -91,12 +91,13 @@ https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=
 - `keywords`, `location`, `distance`, `f_TPR` and `f_AL=true` (Easy Apply) work. `f_WT` (remote) does **not**.
 - Rate limit: roughly 30 requests, then HTTP 429. Pace about 1 second apart, accept a partial result, and say which search was cut short.
 - Logged out, you **can't** confirm a job is still open, truly Easy Apply, or truly remote. Mark these jobs "unverified" in the summary.
+- **Remote jobs are mostly out of reach logged out.** The US-wide search returns a city for nearly every job, and the remote flag isn't readable, so the location filter drops almost everything outside the home area. If the user accepts remote work, say so plainly in the summary (see Step 8).
 
 ### 1c. Cheap filters, then a shortlist
 
 Apply the Step 5 filters using only the card (title, company, location, pay if shown). Drop anything already in `seen.json` or already a `url` in the spreadsheet.
 
-If more than about 40 survive (15 in small mode), **shortlist** before fetching descriptions. Rank by title fit to the preferred role, target-company priority, and pay if shown. Fetch descriptions for the top slice only. Tell the user honestly how many were set aside, and **don't** add those to `seen.json`, so they come back next time.
+If more than about 40 survive (10 in small mode), **shortlist** before fetching descriptions. Rank by title fit to the preferred role, target-company priority, and pay if shown. Fetch descriptions for the top slice only. Tell the user honestly how many were set aside, and **don't** add those to `seen.json`, so they come back next time.
 
 ### 1d. Check the shortlist on the logged-in page: open? remote? pay?
 
@@ -161,19 +162,27 @@ For each: open the page, wait about 3 seconds, check for a CAPTCHA (see **CAPTCH
 
 ```javascript
 (function(){
+  // Badge and metadata lines that sit between the title and the company on Indeed cards.
+  const noise = /^(new|easily apply|urgently hiring|hiring multiple candidates|responsive employer|active \d+ days? ago|posted .*ago|just posted|employer active.*|view similar jobs.*|\d+(\.\d+)?|\d+(\.\d+)?\s*out of 5.*|.*reviews?|typically responds.*|responds within.*|often replies.*|replies within.*|usually responds.*|full-time|part-time|contract|temporary|.*\$[\d,].*|up to \$.*|from \$.*|.*an hour|.*a year|.*per (hour|year).*|.*benefits.*|.*shift.*|.*schedule.*|show more.*|·)$/i;
   const out = [], seen = new Set();
   for (const a of document.querySelectorAll('a[id^="job_"], a[data-jk]')) {
     const jk = a.getAttribute('data-jk') || (a.id || '').replace(/^job_/, '');
     if (!jk || seen.has(jk)) continue; seen.add(jk);
     const root = a.closest('li') || a.closest('div');
-    const L = (root ? root.innerText : '').split('\n').map(s => s.trim()).filter(Boolean);
-    out.push({ jk, t: L[0] || '', c: L[1] || '', l: L[2] || '' });
+    const raw = (root ? root.innerText : '');
+    const L = raw.split('\n').map(s => s.trim()).filter(Boolean).filter(l => !noise.test(l));
+    // Title from the link itself when it has text. It's more reliable than line order.
+    const t = (a.innerText || '').trim() || L[0] || '';
+    const rest = L.filter(l => l !== t);
+    out.push({ jk, t, c: rest[0] || '', l: rest[1] || '', ea: /easily apply/i.test(raw),
+               pay: (raw.match(/\$[\d,.]+(?:K)?\s*(?:-|–|to)\s*\$[\d,.]+(?:K)?\s*(?:an hour|a year|per hour|per year)?/i) || [''])[0] });
   }
-  return out.length;
+  localStorage.setItem('jsk_indeed', JSON.stringify(out));
+  return out.length + ' cards';
 })()
 ```
 
-(Store the results in `localStorage` as with LinkedIn.) The job URL is `https://www.indeed.com/viewjob?jk=<jk>`. Cheap-filter the cards, then open the detail pages for new survivors only and read the description from the page text. On the first page, if the top of the page shows "Sign in" and no "My jobs", add a note to the summary: "Indeed: searched without logging in. Logging in reduces CAPTCHAs." Don't stop.
+Read them back from `localStorage` in small chunks. **Sanity-check the result:** if more than a few cards have a company that looks like a badge, a date or a pay figure, the card layout has changed. Read those jobs' company from the detail page instead, and say so in the summary. `ea` is Indeed's "Easily apply" flag, so write it to `easy_apply`. The job URL is `https://www.indeed.com/viewjob?jk=<jk>`. Cheap-filter the cards, then open the detail pages for new survivors only and read the description from the page text. On the first page, if the top of the page shows "Sign in" and no "My jobs", add a note to the summary: "Indeed: searched without logging in. Logging in reduces CAPTCHAs." Don't stop.
 
 ## Step 3: Dice
 
@@ -196,7 +205,7 @@ Only if `company_career_pages` is on and `target-companies.csv` has rows.
 Stop at the first that works. If the company's `careers_url` is filled in, start from it. If `career-page-cache.json` already knows the board type and address, use that.
 
 1. **Lever:** `curl -s https://api.lever.co/v0/postings/<slug>?mode=json`. Try a couple of slug variants (lowercase, hyphens, no "inc"). A non-empty JSON list means you've found it. Use `descriptionPlain`, not `description`.
-2. **Greenhouse:** `curl -s https://boards-api.greenhouse.io/v1/boards/<token>/jobs`. Filter titles and locations first, then fetch details only for survivors: `.../jobs/<id>?questions=false`. **Never** add `?content=true` to the list (it can be megabytes).
+2. **Greenhouse:** `curl -s https://boards-api.greenhouse.io/v1/boards/<token>/jobs`. Filter titles and locations first, then fetch details only for survivors: `.../jobs/<id>?questions=false`. **Never** add `?content=true` to the list (it can be megabytes). Many companies don't publish pay through Greenhouse at all, even when their LinkedIn listing shows it. Leave `comp_text` empty rather than guessing. If the same job also came in from LinkedIn this run, use that row's pay range.
 3. **Workday** (`<tenant>.wd<N>.myworkdayjobs.com/<site>`): POST `https://<tenant>.wd<N>.myworkdayjobs.com/wday/cxs/<tenant>/<site>/jobs` with `{"appliedFacets":{},"limit":20,"offset":0,"searchText":"<role>"}`, headers `Content-Type: application/json` and a `Referer` of the site URL. Notes:
    - `limit` max is 20 (50 gives HTTP 400). Page with `offset`. `total` only appears on the first page.
    - Detail URLs (`.../job/<externalPath>`) return 403 unless you reuse the cookies from a search POST (`curl -c jar -b jar` on both calls).
@@ -235,7 +244,7 @@ Read every threshold from `criteria.md`. Never hard-code a number.
 
 ## Step 7: Save each new job
 
-**7a. Id.** `<source>-<today>-<company-slug>-<role-slug>`: lowercase ASCII, hyphens, punctuation dropped, role slug cut to about 60 characters, `-2`/`-3` on a collision.
+**7a. Id.** `<source>-<today>-<company-slug>-<role-slug>`: lowercase ASCII, hyphens, punctuation dropped, role slug cut to at most 60 characters **at a hyphen** (never mid-word), `-2`/`-3` on a collision.
 
 **7b. Description file** `my-search/postings/<id>.md`, using `templates/job-posting.md`. Fill in the frontmatter and the description, key requirements and nice-to-haves sections. Put scan observations under `## Notes` ("pay from the LinkedIn page", "card said Remote, description says Austin hybrid"). No scores in this file. `score-jobs` adds those.
 
@@ -266,6 +275,8 @@ Done. Searched LinkedIn, Indeed, Dice and 4 company career pages.
 
 Next: say "score my jobs".
 ```
+
+If LinkedIn ran logged out and the user accepts remote work, add this line near the top: "⚠ You're not logged into LinkedIn, so I could barely search remote jobs. Log into LinkedIn in Chrome and ask me again for a much better remote search."
 
 Always include: closed count, set-aside count (and that they'll come back), every duplicate flag (and that nothing was merged), and any skipped or degraded source with the reason.
 

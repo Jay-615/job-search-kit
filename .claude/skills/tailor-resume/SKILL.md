@@ -41,7 +41,7 @@ From the posting file: the description, key requirements, nice-to-haves, notes, 
 
 ## Step 3: The folder
 
-`app_dir = my-search/applications/<company-slug>-<role-slug>-<today>/` (lowercase, hyphens, role slug cut to about 50 characters).
+`app_dir = my-search/applications/<company-slug>-<role-slug>-<today>/` (lowercase, hyphens, role slug cut to at most 50 characters **at a hyphen**, never mid-word).
 
 If it already exists (they've tailored for this job today), ask: "Start fresh (Recommended)" / "Keep my edits and just remake the Word file" / "Cancel".
 
@@ -84,17 +84,21 @@ Drafted <today> · Score <score> · <url>
 
 ## Step 6: Make the Word document
 
-Use the pandoc command from `profile.md` (`pandoc` or `tools/pandoc/bin/pandoc`).
+There's always a way to make the Word file. Pick the first that applies:
 
-- **If the original resume is a `.docx`** (`my-search/resume/original.docx`), use it as the style reference, so the tailored version keeps the user's own fonts and spacing:
+1. **The original resume is a `.docx` and pandoc is available** (the command in `profile.md` under `## Tools`, `pandoc` or `tools/pandoc/bin/pandoc`). Use the friend's own resume as the style reference, so the tailored version keeps their fonts and spacing:
 
-  ```bash
-  <pandoc> "<app_dir>/resume.md" -o "<app_dir>/resume.docx" --reference-doc=my-search/resume/original.docx
-  ```
+   ```bash
+   <pandoc> "<app_dir>/resume.md" -o "<app_dir>/resume.docx" --reference-doc=my-search/resume/original.docx
+   ```
 
-- **Otherwise**, leave out `--reference-doc` (pandoc's clean default styles).
-- Check `resume.docx` exists and isn't empty. If pandoc errors with the reference doc, retry without it and mention that in the summary.
-- **If pandoc isn't installed** (`pandoc: none`, or the command fails): skip the Word file, and say "I've made the markdown version. To get Word files, say **install pandoc**." Then follow the pandoc stage in `.claude/skills/setup/SKILL.md`.
+2. **Anything else** (no pandoc, the original was a PDF or text, or step 1 failed): use the kit's built-in converter. It needs nothing installed and produces a clean, conventional resume layout:
+
+   ```bash
+   python3 scripts/md2docx.py "<app_dir>/resume.md" "<app_dir>/resume.docx"
+   ```
+
+Check that `resume.docx` exists and isn't empty. If step 1 failed and you fell back to step 2, mention it in one line ("I used the kit's standard layout rather than your own resume's styling"). If the friend's original was a `.docx` but pandoc isn't installed, mention once that saying **install pandoc** would let tailored resumes match their own styling. It's optional.
 
 Record the folder in the row: `python3 scripts/pipeline.py update` with `[{"url": "<url>", "application_folder": "<app_dir>"}]`. If the spreadsheet is open, skip this and mention it. It isn't essential.
 

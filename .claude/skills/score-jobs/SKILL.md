@@ -23,7 +23,7 @@ Filters were already applied during the scan. Don't filter again here. Every row
 
 1. `python3 scripts/pipeline.py check-open`. If it exits 2, stop and show the message.
 2. Read `my-search/profile.md`:
-   - `## Scoring`: `Experience match weight` (default 0.7), `Target company weight` (default 0.3), `Network proximity weight` (default 0), `Threshold` (default 70). If the weights don't add up to about 1.0, warn but use them as written.
+   - `## Scoring`: `Experience match weight` (default 0.9), `Target company weight` (default 0.1), `Network proximity weight` (default 0), `Threshold` (default 70). If the weights don't add up to about 1.0, warn but use them as written.
    - `## Add-ons`: `network`. If it says `installed`, the network add-on is present (see 1b).
    - `## Resume`: master resume path (default `my-search/resume/master-resume.md`).
 3. Read `my-search/criteria.md`: roles (note the one marked `(preferred role)`), seniority (target and "scored lower"), industries (strong, partial, avoid).
@@ -64,6 +64,8 @@ Without the add-on, leave `net`, `high_bridges` and `med_bridges` empty and use 
 
 ### 1c. Target company `tgt` (0–100)
 
+This is a nudge, not a gate. At the default 10% weight, a High-priority company adds 10 points and an unlisted one adds nothing, so a great fit anywhere can still reach the top of the list.
+
 Look up the company in `target-companies.csv` (ignore case and extra spaces, and allow obvious variants like "Inc."): High 100, Medium 60, Low 20, not on the list 0.
 
 ### 1d. Overall `score`
@@ -72,7 +74,7 @@ With a network score: `round(we*exp + wn*net + wt*tgt)`.
 
 Without one: `round((we*exp + wt*tgt) / (we + wt))`.
 
-Then, if the title matches the **preferred role**, add 5. Cap at 100.
+Then the **preferred-role bonus**: add 5 (cap at 100) only if the title's core matches the preferred role **exactly**. The core is the title before any comma, dash, slash or parenthesis, with "Sr."/"Sr" read as "Senior" and "PM" as "Product Manager". "Sr. Product Manager - Payments" matches "Senior Product Manager", but "Senior Product Manager, Technical" and "Senior PMT" don't. **Skip the bonus entirely** if no role is marked preferred, or if the preferred role is the only role in `criteria.md`, because then it would apply to almost everything and stop meaning anything.
 
 ### 1e. The `why` column
 
@@ -81,7 +83,7 @@ One line, under about 15 words, naming what drives the score. Don't repeat the n
 - High: `Strong checkout and payments fit. Target company, High.`
 - Low: `Off-target industry. Wants 10+ yrs people management.`
 - Penalties, plainly: `Director-level, above target.` / `Pay range straddles your floor.`
-- Plus `+5 preferred role` when the boost applies.
+- Plus `+5 top title` when the bonus applies.
 
 No semicolons (the helper replaces them anyway).
 

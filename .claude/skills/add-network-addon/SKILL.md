@@ -37,7 +37,7 @@ job-search-kit-network-main/
 4. **Copy** each source to its destination, creating folders as needed. Never run anything from the download.
 5. **Record it.** Copy `manifest.md` to `my-search/.addons/network-manifest.md`. In `my-search/profile.md` under `## Add-ons`, set `network: installed` and `network_version: <VERSION>`. Create `my-search/network/` if missing.
 6. **Delete** the temporary folder.
-7. **Weights** (first install only). Ask: "Now that network scores are available, use the standard three-way weighting (experience 50%, network 30%, target company 20%)?" Options: "Yes (Recommended)" / "Keep my current weights". On yes, set `Experience match weight: 0.5`, `Network proximity weight: 0.3`, `Target company weight: 0.2` in `## Scoring`.
+7. **Weights** (first install only). Ask: "Now that network scores are available, use the standard three-way weighting (experience 60%, network 30%, target company 10%)?" Options: "Yes (Recommended)" / "Keep my current weights". On yes, set `Experience match weight: 0.6`, `Network proximity weight: 0.3`, `Target company weight: 0.1` in `## Scoring`.
 8. **Next step** (first install only). Tell the user: "Installed. The first step is reading your LinkedIn connections, which takes a few minutes." Then ask: "Read my connections now (Recommended)" / "Later". On yes, follow the add-on's `build-connections` skill (`.claude/skills/build-connections/SKILL.md`).
 9. New commands may need a fresh conversation before they show up in the `/` menu. Plain sentences work right away.
 
@@ -45,7 +45,7 @@ job-search-kit-network-main/
 
 1. Confirm: "Remove the network add-on? Your connections spreadsheet in my-search/network/ stays, in case you add it back."
 2. Delete every destination listed in `my-search/.addons/network-manifest.md`. Delete nothing else.
-3. Set `network: not installed` in `profile.md`. Ask whether to switch the weights back to 0.7 experience, 0.3 target company, 0 network.
+3. Set `network: not installed` in `profile.md`. Ask whether to switch the weights back to 0.9 experience, 0.1 target company, 0 network.
 4. Leave the `net` and bridge columns in the spreadsheet as they are.
 
 ## Rules

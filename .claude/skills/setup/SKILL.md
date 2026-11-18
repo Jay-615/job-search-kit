@@ -45,21 +45,28 @@ Scanning job sites works through the Claude in Chrome extension, using the user'
 
 Skip this if Chrome was skipped.
 
-Open https://www.linkedin.com/feed/ in a new tab in their Chrome. If it redirects to a login page, ask them to log in there themselves. **Never type their password or drive the login.** Wait, then re-check. If the feed loads, they're logged in.
+Open https://www.linkedin.com/feed/ in a new tab in their Chrome. If the feed loads, they're logged in. Move on.
+
+If it redirects to a login page, explain why it matters and let them choose:
+
+> You're not logged into LinkedIn in Chrome. Logging in makes searches much better: I can check which jobs are still open, which are really remote, and what they pay. **Without it, I mostly can't find remote jobs.** You can log in now (in the Chrome tab I just opened), or skip and do it later.
+
+Options: "I'll log in now (Recommended)" / "Skip for now". On "log in now", wait until they say done, then re-check. If it still shows the login page, offer the same two options again. On "Skip for now", record `- linkedin_login: skipped` under `## Sources` in `profile.md` and carry on. **Never type their password or drive the login.**
 
 Then mention once, without asking anything: "If you have Indeed or Dice accounts, logging into those in Chrome too means fewer 'are you human?' checks. Optional."
 
-## Stage `pandoc`: the Word-document converter
+## Stage `pandoc`: quiet check for an optional converter
 
-Tailored resumes come out as Word documents, which takes a small free tool called pandoc.
+Tailored resumes always come out as Word documents. The kit has a built-in converter (`scripts/md2docx.py`), so **nothing needs installing for that**. A free tool called pandoc is optional. It lets tailored resumes copy the styling of the friend's own Word resume.
 
-1. Check, in order: `pandoc --version`, then `tools/pandoc/bin/pandoc --version`. If either works, record that command in `profile.md` under `## Tools` and move on without mentioning it.
-2. If neither works, ask: "To make Word versions of your tailored resumes, I need a small free converter called pandoc. Can I download it into this folder? It doesn't need your password and doesn't change anything else on your Mac." Options: "Yes, download it (Recommended)" / "Skip. Markdown resumes only for now."
-3. To install:
-   - Check `command -v brew`. **If Homebrew is already installed**, `brew install pandoc` is fine, then record `pandoc`.
-   - Otherwise, use the official release from GitHub. Get the latest release's assets from `https://api.github.com/repos/jgm/pandoc/releases/latest`. Pick the macOS zip that matches `uname -m` (`arm64` means the `arm64-macOS.zip` asset, `x86_64` means the `x86_64-macOS.zip` asset). Download it with `curl -L` into a temporary folder, unzip it, and copy its `bin/pandoc` to `tools/pandoc/bin/pandoc`. Run `tools/pandoc/bin/pandoc --version` to confirm, then record `tools/pandoc/bin/pandoc` in `profile.md`.
-   - If macOS blocks it ("cannot be opened because the developer cannot be verified"), run `xattr -d com.apple.quarantine tools/pandoc/bin/pandoc` and try again.
-   - If anything fails, don't get stuck. Say Word output will be off for now, record `pandoc: none`, and move on. They can say "install pandoc" later.
+Check, in order: `pandoc --version`, then `tools/pandoc/bin/pandoc --version`. If either works, record that command in `profile.md` under `## Tools`. If neither works, record `pandoc: none`. **Don't mention it either way.** The resume stage offers pandoc if (and only if) it would help.
+
+### Installing pandoc (only when offered, or when the user says "install pandoc")
+
+- Check `command -v brew`. **If Homebrew is already installed**, `brew install pandoc` is fine, then record `pandoc`.
+- Otherwise, use the official release from GitHub. Get the latest release's assets from `https://api.github.com/repos/jgm/pandoc/releases/latest`. Pick the macOS zip that matches `uname -m` (`arm64` means the `arm64-macOS.zip` asset, `x86_64` means the `x86_64-macOS.zip` asset). Download it with `curl -L` into a temporary folder, unzip it, and copy its `bin/pandoc` to `tools/pandoc/bin/pandoc`. Run `tools/pandoc/bin/pandoc --version` to confirm, then record `tools/pandoc/bin/pandoc` in `profile.md`.
+- If macOS blocks it ("cannot be opened because the developer cannot be verified"), run `xattr -d com.apple.quarantine tools/pandoc/bin/pandoc` and try again.
+- If anything fails, don't get stuck. Say "No problem, your tailored resumes will use the kit's standard layout instead.", keep `pandoc: none`, and move on.
 
 Python: the kit uses `python3` for spreadsheet handling. On a Mac, the first `python3` run can pop up a request to install Apple's "command line developer tools". If that happens, tell them to click **Install**, wait (a few minutes), and say when it's done. It's a normal, free Apple download.
 
@@ -78,6 +85,7 @@ Ask in chat, one at a time: full name, email, phone, city and state, LinkedIn pr
 4. Clean up the result so it follows the structure of `templates/resume.md`: name and contact line, Summary, Experience (title, company, place, dates, bullets), Skills, Education, Certifications. **Keep their words.** Restructure, don't rewrite. Never add anything that isn't in the original.
 5. Show a short summary: "I read N jobs, from <earliest> to <latest>. Most recent: <title> at <company>." Then ask: "Does that look right?" Options: "Looks right (Recommended)" / "Something's off" (ask what, and fix it). Tell them they can open `my-search/resume/master-resume.md` any time. It's the base every tailored resume starts from.
 6. Record the paths under `## Resume` in `profile.md`.
+7. **Only if** their original is a `.docx` **and** `pandoc: none`: ask once, "Want tailored resumes to match your own Word resume's fonts and layout? That needs a small free tool called pandoc, which I can download into this folder. No password needed. Otherwise I'll use a clean standard layout." Options: "Use the standard layout (Recommended)" / "Download pandoc and match my styling". On download, follow **Installing pandoc** above.
 
 ## Stage `criteria`: what jobs they want
 
@@ -102,7 +110,7 @@ All four sources are on by default: LinkedIn, Indeed, Dice, company career pages
 
 > Each search uses a fair amount of your Claude plan. Company career pages cost the most. On a Pro plan, a weekly search is fine with the standard settings. If you hit usage limits, pick "lighter".
 
-Options: "Standard (Recommended): all sites, up to 8 company pages per search" / "Lighter: all sites, up to 3 company pages per search" / "Choose sites myself" (multi-select). Write `## Sources` and `## Career-page limits` to `profile.md`. Leave the `## Scoring` defaults as they are (0.7 / 0.3 / 0, threshold 70).
+Options: "Standard (Recommended): all sites, up to 8 company pages per search" / "Lighter: all sites, up to 3 company pages per search" / "Choose sites myself" (multi-select). Write `## Sources` and `## Career-page limits` to `profile.md`. Leave the `## Scoring` defaults as they are (0.9 experience / 0.1 target company / 0 network, threshold 70).
 
 ## Stage `addon`: the network add-on
 

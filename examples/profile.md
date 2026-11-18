@@ -14,8 +14,8 @@
 - Original file: my-search/resume/original.docx
 
 ## Scoring
-- Experience match weight: 0.7
-- Target company weight: 0.3
+- Experience match weight: 0.9
+- Target company weight: 0.1
 - Network proximity weight: 0
 - Threshold: 70
 

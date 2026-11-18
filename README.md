@@ -14,7 +14,7 @@ It doesn't apply for you. It does the searching, sorting and first drafts, so yo
 ## Get started
 
 1. On this page, click the green **Code** button, then **Download ZIP**. Unzip it and move the `job-search-kit` folder into your Documents folder. (If the folder is called `job-search-kit-main`, that's fine, or rename it.)
-2. Open the **Claude** app, go to the **Code** tab, and open the `job-search-kit` folder.
+2. Open the **Claude** app, go to the **Code** tab, and open the `job-search-kit` folder. If Claude asks whether you trust this folder, say yes. That lets the kit run its everyday steps without asking you each time.
 3. Type: **set me up**
 
 Claude takes it from there. It checks Chrome, asks about you and the jobs you want, and runs a first search with you. It takes about 10 minutes.
